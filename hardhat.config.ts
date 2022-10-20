@@ -10,6 +10,7 @@ const config: HardhatUserConfig = {
   solidity: {
     version: '0.8.17',
     settings: {
+      // viaIR: true,
       optimizer: {
         enabled: true,
         runs: 200,
@@ -23,14 +24,6 @@ const config: HardhatUserConfig = {
     },
     goerli: {
       url: process.env.GOERLI_URL || '',
-      accounts,
-    },
-    rinkeby: {
-      url: process.env.RINKEBY_URL || '',
-      accounts,
-    },
-    ropsten: {
-      url: process.env.ROPSTEN_URL || '',
       accounts,
     },
     polygon: {
