@@ -1,0 +1,21 @@
+{
+  "name": "_template_hardhat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "hardhat clean",
+    "compile": "hardhat compile",
+    "test": "hardhat test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "@openzeppelin/contracts": "^4.7.3",
+    "@types/node": "^16.11.59",
+    "dotenv": "^16.0.2",
+    "hardhat": "^2.11.2"
+  }
+}
