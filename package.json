@@ -1,5 +1,5 @@
 {
-  "name": "_template_hardhat",
+  "name": "on-chain-photo",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -14,8 +14,10 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
     "@openzeppelin/contracts": "^4.7.3",
+    "@types/lodash": "^4.14.186",
     "@types/node": "^16.11.59",
     "dotenv": "^16.0.2",
-    "hardhat": "^2.11.2"
+    "hardhat": "^2.11.2",
+    "lodash": "^4.17.21"
   }
 }
