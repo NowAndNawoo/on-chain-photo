@@ -1,9 +1,10 @@
 import { ethers } from 'hardhat';
-import { getEnvValue, waitTx } from '../lib/common';
+import { getEnvValue, getEnvValueAsNumber, waitTx } from '../lib/common';
 import { uploadImage } from './lib/uploadImage';
 
 async function main() {
-  const contractAddress = getEnvValue('CONTRACT_ADDRESS');
+  const contractAddress = getEnvValue('V1_CA');
+  const tokenId = getEnvValueAsNumber('V1_ID');
 
   const [owner] = await ethers.getSigners();
   console.log('owner:', owner.address);
@@ -11,14 +12,21 @@ async function main() {
   const contract = await ethers.getContractAt('OnChainPhotoV1', contractAddress);
   console.log('contract address:', contract.address);
 
-  // upload image
+  // uploadImage
+  const tokens = [
+    { tokenId: 1, fileSize: '51kb', splitSize: 40000 }, // totalGasUsed: 53783333
+    { tokenId: 2, fileSize: '101kb', splitSize: 25000 }, // totalGasUsed: 128745004
+    { tokenId: 3, fileSize: '199kb', splitSize: 14000 }, // totalGasUsed: 395738933
+  ];
+  const token = tokens.find((t) => t.tokenId === tokenId);
+  if (token === undefined) throw Error('token not found');
   const tokenInfo = {
-    filePath: './data/12kb.jpg',
-    tokenId: 1,
-    name: 'OnChainPhotoV1 Photo No.1',
-    description: `OnChainPhotoV1 12KB`,
+    filePath: `./data/${token.fileSize}.jpg`,
+    tokenId: token.tokenId,
+    name: `OnChainPhotoV1 ${token.fileSize}`,
+    description: 'Fully on-chain NFT of jpg photo file.',
   };
-  await uploadImage(contract, tokenInfo);
+  await uploadImage(contract, tokenInfo, token.splitSize);
 
   // mint
   const tx = await contract.mint(tokenInfo.tokenId);

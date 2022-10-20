@@ -33,8 +33,6 @@ export const waitDeployed = async (title: string, contract: Contract) => {
   console.log('# Deploy ' + title);
   console.log('contract deploy to:', contract.address);
   console.log('hash:', contract.deployTransaction.hash);
-  console.log('nonce:', contract.deployTransaction.nonce);
-  console.log('gasLimit:', contract.deployTransaction.gasLimit.toString());
   console.log('gasPrice:', toGwei(contract.deployTransaction.gasPrice));
   await contract.deployed();
   console.log('deployed!');
@@ -44,13 +42,12 @@ export const waitDeployed = async (title: string, contract: Contract) => {
 export const waitTx = async (title: string, tx: ContractTransaction) => {
   console.log('# ' + title);
   console.log('hash:', tx.hash);
-  console.log('nonce:', tx.nonce);
-  console.log('gasLimit:', tx.gasLimit.toString());
   console.log('gasPrice:', toGwei(tx.gasPrice));
   const receipt = await tx.wait();
   console.log('gasUsed:', receipt.gasUsed.toString());
   console.log('confirmed!');
   console.log();
+  return receipt.gasUsed.toNumber();
 };
 
 export function showGas(title: string, gas: BigNumber): void {

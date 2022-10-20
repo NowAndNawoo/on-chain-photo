@@ -1,6 +1,8 @@
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 import { expect } from 'chai';
+import { readFileSync } from 'fs';
 import { ethers } from 'hardhat';
+import { uploadImage } from '../scripts/v1/lib/uploadImage';
 
 describe('OnChainPhotoV1', function () {
   async function fixture() {
@@ -127,6 +129,22 @@ describe('OnChainPhotoV1', function () {
       const { contract, user1 } = await loadFixture(fixture);
       await contract.appendUri(1, Buffer.from('hello'));
       await expect(contract.connect(user1).freeze(1)).reverted;
+    });
+  });
+
+  describe.skip('uploadImage', function () {
+    it('metadataが正しい', async function () {
+      const tokenInfo = { filePath: './test/data/10kb.jpg', tokenId: 1, name: 'token1', description: 'description1' };
+      const { contract } = await loadFixture(fixture);
+      await uploadImage(contract, tokenInfo, 14000);
+      await contract.mint(tokenInfo.tokenId);
+      const uri = await contract.tokenURI(tokenInfo.tokenId);
+      const metadata = JSON.parse(decodeURIComponent(uri.split(',')[1])); //TODO: "data:application/json,"の後を取得
+      expect(metadata.name).equal(tokenInfo.name);
+      expect(metadata.description).equal(tokenInfo.description);
+      const image = Buffer.from(metadata.image.split(',')[1], 'base64'); // TODO: "data:image/jpg;base64,"の後を取得
+      const original = readFileSync(tokenInfo.filePath);
+      expect(original.compare(image)).equal(0);
     });
   });
 });

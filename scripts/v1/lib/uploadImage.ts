@@ -12,8 +12,7 @@ type TokenInfo = {
 export async function uploadImage(
   contract: OnChainPhotoV1,
   { name, description, filePath, tokenId }: TokenInfo,
-  splitSize: number = 14000,
-  encodeMetadata: boolean = false
+  splitSize: number
 ) {
   // URIを作成
   const fileContent = readFileSync(filePath);
@@ -21,17 +20,19 @@ export async function uploadImage(
   const fileContentBase64 = fileContent.toString('base64');
   const image = 'data:image/jpeg;base64,' + fileContentBase64;
   const metadata = JSON.stringify({ name, description, image });
-  const uri = encodeMetadata
-    ? 'data:application/json;base64,' + Buffer.from(metadata).toString('base64')
-    : 'data:application/json,' + encodeURIComponent(metadata);
+  const uri = 'data:application/json,' + encodeURIComponent(metadata);
   const data = Buffer.from(uri);
 
   // 分割アップロード(appendUri)
   const splitCount = Math.ceil(data.length / splitSize);
-  console.log({ tokenId, filePath, fileSize, dataLength: data.length, splitSize, splitCount, encodeMetadata });
+  console.log({ tokenId, filePath, fileSize, dataLength: data.length, splitSize, splitCount });
+  let totalGasUsed = 0;
   for (let i = 0; i < splitCount; i++) {
     const buffer = data.subarray(i * splitSize, (i + 1) * splitSize);
     const tx = await contract.appendUri(tokenId, buffer);
-    await waitTx(`appednUri ${i + 1} of ${splitCount}`, tx);
+    const gasUsed = await waitTx(`appednUri ${i + 1} of ${splitCount}`, tx);
+    totalGasUsed += gasUsed;
   }
+  console.log(`totalGasUsed: ${totalGasUsed}`);
+  console.log();
 }
