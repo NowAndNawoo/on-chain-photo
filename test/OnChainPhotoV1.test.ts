@@ -2,7 +2,8 @@ import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 import { expect } from 'chai';
 import { readFileSync } from 'fs';
 import { ethers } from 'hardhat';
-import { uploadImage } from '../scripts/v1/lib/uploadImage';
+import { createUri } from '../scripts/lib/createUri';
+import { uploadUri } from '../scripts/v1/mint';
 
 describe('OnChainPhotoV1', function () {
   async function fixture() {
@@ -132,14 +133,15 @@ describe('OnChainPhotoV1', function () {
     });
   });
 
-  describe.skip('uploadImage', function () {
+  describe.skip('createUri,uploadUri', function () {
     it('metadataが正しい', async function () {
       const tokenInfo = { filePath: './test/data/10kb.jpg', tokenId: 1, name: 'token1', description: 'description1' };
       const { contract } = await loadFixture(fixture);
-      await uploadImage(contract, tokenInfo, 14000);
+      const uri1 = createUri(tokenInfo);
+      await uploadUri(contract, tokenInfo.tokenId, uri1, 14000);
       await contract.mint(tokenInfo.tokenId);
-      const uri = await contract.tokenURI(tokenInfo.tokenId);
-      const metadata = JSON.parse(decodeURIComponent(uri.split(',')[1])); //TODO: "data:application/json,"の後を取得
+      const uri2 = await contract.tokenURI(tokenInfo.tokenId);
+      const metadata = JSON.parse(decodeURIComponent(uri2.split(',')[1])); //TODO: "data:application/json,"の後を取得
       expect(metadata.name).equal(tokenInfo.name);
       expect(metadata.description).equal(tokenInfo.description);
       const image = Buffer.from(metadata.image.split(',')[1], 'base64'); // TODO: "data:image/jpg;base64,"の後を取得
