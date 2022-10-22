@@ -2,7 +2,10 @@ import { ethers } from 'hardhat';
 import { OnChainPhotoV3 } from '../../typechain-types';
 import { getEnvValue, getEnvValueAsNumber, waitTx } from '../lib/common';
 import { createUri } from '../lib/createUri';
+import { getEIP1559Overrides } from '../lib/overrides';
 import { splitData } from '../lib/uploadData';
+
+const overrides = getEIP1559Overrides(1, 0.01); // or undefined
 
 async function uploadUri(contract: OnChainPhotoV3, tokenId: number, uri: string, splitSize: number) {
   const data = Buffer.from(uri);
@@ -11,7 +14,7 @@ async function uploadUri(contract: OnChainPhotoV3, tokenId: number, uri: string,
   console.log('chunk count:', chunkValues.length);
   for (let i = 0; i < chunkValues.length; i++) {
     const values = chunkValues[i];
-    const txAppend = await contract.appendUri(tokenId, values);
+    const txAppend = await contract.appendUri(tokenId, values, overrides);
     const gasUsed = await waitTx(`appnendUri ${i + 1} of ${chunkValues.length} (size=${values.length})`, txAppend);
     totalGasUsed += gasUsed;
   }
@@ -59,7 +62,7 @@ async function main() {
   await uploadUri(contract, tokenId, uri, splitSize);
 
   // mint
-  const txMint = await contract.mint(tokenId);
+  const txMint = await contract.mint(tokenId, overrides);
   await waitTx('mint', txMint);
 
   console.log('done!');
