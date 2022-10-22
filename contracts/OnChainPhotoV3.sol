@@ -58,9 +58,9 @@ contract OnChainPhotoV3 is ERC721("OnChainPhotoV3", "OCP3"), Ownable {
         (uint256 uriAddr, ) = Memory.fromBytes(uri);
         for (uint256 i = 0; i < tokens[tokenId].addresses.length; i++) {
             bytes memory data = SSTORE2.read(tokens[tokenId].addresses[i]);
-            (uint256 dataAddr, uint256 len) = Memory.fromBytes(data);
-            Memory.copy(dataAddr, uriAddr, len);
-            uriAddr += len;
+            (uint256 dataAddr, uint256 dataLen) = Memory.fromBytes(data);
+            Memory.copy(dataAddr, uriAddr, dataLen);
+            uriAddr += dataLen;
         }
         return string(uri);
     }
