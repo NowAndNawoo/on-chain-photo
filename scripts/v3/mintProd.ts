@@ -1,33 +1,22 @@
 import { ethers } from 'hardhat';
-import { OnChainPhotoV2 } from '../../typechain-types';
+import { OnChainPhotoV3 } from '../../typechain-types';
 import { getEnvValue, getEnvValueAsNumber, waitTx } from '../lib/common';
 import { createUri } from '../lib/createUri';
+import { getEIP1559Overrides } from '../lib/overrides';
 import { splitData } from '../lib/splitData';
-
-async function uploadUri(contract: OnChainPhotoV2, tokenId: number, uri: string, splitSize: number) {
-  const data = Buffer.from(uri);
-  const chunkValues = splitData(data, splitSize, 5);
-  let totalGasUsed = 0;
-  console.log('chunk count:', chunkValues.length);
-  for (let i = 0; i < chunkValues.length; i++) {
-    const values = chunkValues[i];
-    const txAppend = await contract.appendUri(tokenId, values);
-    const gasUsed = await waitTx(`appnendUri ${i + 1} of ${chunkValues.length} (size=${values.length})`, txAppend);
-    totalGasUsed += gasUsed;
-  }
-  console.log(`totalGasUsed: ${totalGasUsed}`);
-  console.log();
-}
+import { uploadUri } from './lib/uploadUri';
 
 async function main() {
-  const contractAddress = getEnvValue('V2_CA');
-  const tokenId = getEnvValueAsNumber('V2_ID');
-  const splitSize = 24575;
+  const contractAddress = getEnvValue('V3_CA');
+  const tokenId = getEnvValueAsNumber('V3_ID');
+
+  const splitSize = 24544;
+  const overrides = getEIP1559Overrides(1, 0.01); // for Goerli
 
   const [owner] = await ethers.getSigners();
   console.log('owner:', owner.address);
 
-  const contract = await ethers.getContractAt('OnChainPhotoV2', contractAddress);
+  const contract = await ethers.getContractAt('OnChainPhotoV3', contractAddress);
   console.log('contract address:', contract.address);
 
   // check tokenId
@@ -42,6 +31,8 @@ async function main() {
     { tokenId: 4, fileSize: '406kb' },
     { tokenId: 5, fileSize: '498kb' },
     { tokenId: 6, fileSize: '603kb' },
+    { tokenId: 7, fileSize: '696kb' },
+    { tokenId: 8, fileSize: '724kb' },
   ];
 
   const token = tokens.find((t) => t.tokenId === tokenId);
@@ -49,15 +40,16 @@ async function main() {
   const tokenInfo = {
     filePath: `./data/${token.fileSize}.jpg`,
     tokenId,
-    name: `On-Chain Photo V2 - ${token.fileSize.toUpperCase()}`,
-    description: 'Fully on-chain NFT of jpg photo file.',
+    name: `On-Chain Photo - ${token.fileSize.toUpperCase()}`,
+    description:
+      'Fully on-chain NFT of JPEG photo image.\n\nOriginal image:  \nhttps://cc0.photo/2015/11/14/colorful-pumpkins/',
   };
 
   const uri = createUri(tokenInfo, true);
-  await uploadUri(contract, tokenId, uri, splitSize);
+  await uploadUri(contract, tokenId, uri, splitSize, overrides);
 
   // mint
-  const txMint = await contract.mint(tokenId);
+  const txMint = await contract.mint(tokenId, overrides);
   await waitTx('mint', txMint);
 
   console.log('done!');

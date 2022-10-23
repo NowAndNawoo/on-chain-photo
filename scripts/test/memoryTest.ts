@@ -1,5 +1,5 @@
 import { ethers } from 'hardhat';
-import { splitData } from '../lib/uploadData';
+import { splitData } from '../lib/splitData';
 import { waitTx } from '../lib/common';
 import { MemoryTest } from '../../typechain-types';
 

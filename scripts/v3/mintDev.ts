@@ -1,31 +1,15 @@
 import { ethers } from 'hardhat';
-import { OnChainPhotoV3 } from '../../typechain-types';
 import { getEnvValue, getEnvValueAsNumber, waitTx } from '../lib/common';
 import { createUri } from '../lib/createUri';
 import { getEIP1559Overrides } from '../lib/overrides';
-import { splitData } from '../lib/uploadData';
-
-const overrides = getEIP1559Overrides(1, 0.01); // or undefined
-
-async function uploadUri(contract: OnChainPhotoV3, tokenId: number, uri: string, splitSize: number) {
-  const data = Buffer.from(uri);
-  const chunkValues = splitData(data, splitSize, 5);
-  let totalGasUsed = 0;
-  console.log('chunk count:', chunkValues.length);
-  for (let i = 0; i < chunkValues.length; i++) {
-    const values = chunkValues[i];
-    const txAppend = await contract.appendUri(tokenId, values, overrides);
-    const gasUsed = await waitTx(`appnendUri ${i + 1} of ${chunkValues.length} (size=${values.length})`, txAppend);
-    totalGasUsed += gasUsed;
-  }
-  console.log(`totalGasUsed: ${totalGasUsed}`);
-  console.log();
-}
+import { uploadUri } from './lib/uploadUri';
 
 async function main() {
   const contractAddress = getEnvValue('V3_CA');
   const tokenId = getEnvValueAsNumber('V3_ID');
+
   const splitSize = 24544;
+  const overrides = getEIP1559Overrides(1, 0.01); // for Goerli
 
   const [owner] = await ethers.getSigners();
   console.log('owner:', owner.address);
@@ -47,6 +31,8 @@ async function main() {
     { tokenId: 6, fileSize: '603kb' },
     { tokenId: 7, fileSize: '696kb' },
     { tokenId: 8, fileSize: '724kb' },
+
+    { tokenId: 16, fileSize: '10kb' },
   ];
 
   const token = tokens.find((t) => t.tokenId === tokenId);
@@ -58,8 +44,8 @@ async function main() {
     description: 'Fully on-chain NFT of jpg photo file.',
   };
 
-  const uri = createUri(tokenInfo);
-  await uploadUri(contract, tokenId, uri, splitSize);
+  const uri = createUri(tokenInfo, true);
+  await uploadUri(contract, tokenId, uri, splitSize, overrides);
 
   // mint
   const txMint = await contract.mint(tokenId, overrides);
