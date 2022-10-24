@@ -9,7 +9,8 @@ async function main() {
   const tokenId = getEnvValueAsNumber('V3_ID');
 
   const splitSize = 24544;
-  const overrides = getEIP1559Overrides(1, 0.01); // for Goerli
+  const overrides = getEIP1559Overrides(1, 0.1); // for Goerli
+  // const overrides = getEIP1559Overrides(10, 1); // for Polygon
 
   const [owner] = await ethers.getSigners();
   console.log('owner:', owner.address);
@@ -23,12 +24,8 @@ async function main() {
 
   // tokens
   const tokens = [
-    { tokenId: 10, fileSize: '10kb' },
-    { tokenId: 11, fileSize: '10kb' },
-    { tokenId: 12, fileSize: '10kb' },
-    { tokenId: 13, fileSize: '10kb' },
-    { tokenId: 14, fileSize: '10kb' },
-    { tokenId: 15, fileSize: '10kb' },
+    { tokenId: 9, fileSize: '751kb' },
+    { tokenId: 20, fileSize: '751kb' },
   ];
 
   const token = tokens.find((t) => t.tokenId === tokenId);
@@ -36,21 +33,17 @@ async function main() {
   const tokenInfo = {
     filePath: `./data/${token.fileSize}.jpg`,
     tokenId,
-    name: `On-Chain Photo V3 - ${token.fileSize.toUpperCase()}`,
+    name: `On-Chain Photo - ${token.fileSize.toUpperCase()}`,
     description:
-      'Fully on-chain NFT of JPEG file.\n\nOriginal image:  \nhttps://cc0.photo/2015/11/14/colorful-pumpkins/',
+      'Fully on-chain NFT of JPEG photo image.\n\nOriginal image:  \nhttps://cc0.photo/2015/11/14/colorful-pumpkins/',
   };
 
-  const uri = createUri(tokenInfo, false);
+  const uri = createUri(tokenInfo, false); // URLエンコードなし
   await uploadUri(contract, tokenId, uri, splitSize, overrides);
 
   // mint
   const txMint = await contract.mint(tokenId, overrides);
   await waitTx('mint', txMint);
-
-  // tokenURI
-  const tokenURI = await contract.tokenURI(tokenId);
-  console.log({ tokenURI });
 
   console.log('done!');
 }

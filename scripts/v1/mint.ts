@@ -42,7 +42,7 @@ async function main() {
     name: `On-Chain Photo V1 - ${token.fileSize.toUpperCase()}`,
     description: 'Fully on-chain NFT of jpg photo file.',
   };
-  const uri = createUri(tokenInfo);
+  const uri = createUri(tokenInfo, true);
   await uploadUri(contract, tokenId, uri, token.splitSize);
 
   // mint
