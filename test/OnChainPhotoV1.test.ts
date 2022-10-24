@@ -133,20 +133,20 @@ describe('OnChainPhotoV1', function () {
     });
   });
 
-  describe.skip('createUri,uploadUri', function () {
-    it('metadataが正しい', async function () {
-      const tokenInfo = { filePath: './test/data/10kb.jpg', tokenId: 1, name: 'token1', description: 'description1' };
-      const { contract } = await loadFixture(fixture);
-      const uri1 = createUri(tokenInfo);
-      await uploadUri(contract, tokenInfo.tokenId, uri1, 14000);
-      await contract.mint(tokenInfo.tokenId);
-      const uri2 = await contract.tokenURI(tokenInfo.tokenId);
-      const metadata = JSON.parse(decodeURIComponent(uri2.split(',')[1])); //TODO: "data:application/json,"の後を取得
-      expect(metadata.name).equal(tokenInfo.name);
-      expect(metadata.description).equal(tokenInfo.description);
-      const image = Buffer.from(metadata.image.split(',')[1], 'base64'); // TODO: "data:image/jpg;base64,"の後を取得
-      const original = readFileSync(tokenInfo.filePath);
-      expect(original.compare(image)).equal(0);
-    });
-  });
+  // describe.skip('createUri,uploadUri', function () {
+  //   it('metadataが正しい', async function () {
+  //     const tokenInfo = { filePath: './test/data/10kb.jpg', tokenId: 1, name: 'token1', description: 'description1' };
+  //     const { contract } = await loadFixture(fixture);
+  //     const uri1 = createUri(tokenInfo, true);
+  //     await uploadUri(contract, tokenInfo.tokenId, uri1, 14000);
+  //     await contract.mint(tokenInfo.tokenId);
+  //     const uri2 = await contract.tokenURI(tokenInfo.tokenId);
+  //     const metadata = JSON.parse(decodeURIComponent(uri2.split(',')[1])); //TODO: "data:application/json,"の後を取得
+  //     expect(metadata.name).equal(tokenInfo.name);
+  //     expect(metadata.description).equal(tokenInfo.description);
+  //     const image = Buffer.from(metadata.image.split(',')[1], 'base64'); // TODO: "data:image/jpg;base64,"の後を取得
+  //     const original = readFileSync(tokenInfo.filePath);
+  //     expect(original.compare(image)).equal(0);
+  //   });
+  // });
 });

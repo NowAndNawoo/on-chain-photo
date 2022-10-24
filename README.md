@@ -3,7 +3,7 @@
 ## Setup
 
 ```shell
-git clone http
+git clone https://github.com/NowAndNawoo/on-chain-photo.git
 cd on-chain-photo
 npm ci
 cp .env.sample .env
