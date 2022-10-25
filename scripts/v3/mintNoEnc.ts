@@ -9,8 +9,7 @@ async function main() {
   const tokenId = getEnvValueAsNumber('V3_ID');
 
   const splitSize = 24544;
-  const overrides = getEIP1559Overrides(1, 0.1); // for Goerli
-  // const overrides = getEIP1559Overrides(10, 1); // for Polygon
+  const overrides = getEIP1559Overrides(2, 0.1); // for Goerli
 
   const [owner] = await ethers.getSigners();
   console.log('owner:', owner.address);
@@ -25,7 +24,7 @@ async function main() {
   // tokens
   const tokens = [
     { tokenId: 9, fileSize: '751kb' },
-    { tokenId: 20, fileSize: '751kb' },
+    { tokenId: 10, fileSize: '762kb' },
   ];
 
   const token = tokens.find((t) => t.tokenId === tokenId);

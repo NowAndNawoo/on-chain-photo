@@ -10,7 +10,6 @@ async function main() {
 
   const splitSize = 24544;
   const overrides = getEIP1559Overrides(1, 0.1); // for Goerli
-  // const overrides = getEIP1559Overrides(10, 1); // for Polygon
 
   const [owner] = await ethers.getSigners();
   console.log('owner:', owner.address);
