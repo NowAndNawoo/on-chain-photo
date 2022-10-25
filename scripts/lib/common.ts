@@ -43,6 +43,7 @@ export const waitTx = async (title: string, tx: ContractTransaction) => {
   console.log('# ' + title);
   console.log('hash:', tx.hash);
   console.log('gasPrice:', toGwei(tx.gasPrice));
+  console.log('nonce', tx.nonce);
   const receipt = await tx.wait();
   console.log('gasUsed:', receipt.gasUsed.toString());
   console.log('confirmed!');
