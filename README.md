@@ -31,7 +31,13 @@ V3_CA=(コントラクトアドレス) V3_ID=(tokenID) npx hardhat run scripts/v
 
 ```shell
 // tokenID=1をミントする例
-V3_CA=0x5FbDB2315678afecb367f032d93F642f64180aa3 V3_ID=1 npx hardhat run scripts/v3/mintProd.ts --network goerli
+V3_CA=0x5FbDB2315678afecb367f032d93F642f64180aa3 V3_ID=1 npx hardhat run scripts/v3/mint.ts --network goerli
+```
+
+(実験用) URL エンコードなしで作成する場合は`mintNoEnc.ts`を使ってください。
+
+```shell
+V3_CA=(コントラクトアドレス) V3_ID=(tokenID) npx hardhat run scripts/v3/mintNoEnc.ts --network goerli
 ```
 
 ## バージョンの違い
