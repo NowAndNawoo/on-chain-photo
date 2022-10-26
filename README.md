@@ -4,7 +4,7 @@ Fully on-chain NFT of JPEG photo image.
 [OpenSea](https://testnets.opensea.io/ja/collection/onchainphoto),
 [Etherscan](https://goerli.etherscan.io/address/0xf564f5B0B09a1E1f93c23a1c8878F541D84ecF60#code)
 
-![](onchainphoto.png)
+![](image/onchainphoto.png)
 
 ## Setup
 
