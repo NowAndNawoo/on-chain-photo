@@ -64,8 +64,21 @@ V3_ID=(tokenID) npx hardhat run scripts/v3/mintNoEnc.ts --network goerli
 - Memory.sol でデータ結合
 - JPG 画像サイズ 〜約 720KB
 
+### On-Chain Photo V3
+
+- SSTORE2 を使用
+- Memory.sol でデータ結合
+- JPG 画像サイズ 〜約 720KB
+
+### On-Chain Photo V4
+
+- SSTORE2 を使用
+- SSTORE2 の chunk を直接データ結合
+- JPG 画像サイズ 〜約 1250KB
+
 ## Links
 
 - [SSTORE2](https://github.com/0xsequence/sstore2)
 - [Memory.sol](https://github.com/ethereum/solidity-examples/blob/master/src/unsafe/Memory.sol)
+- [LibraryStorage.sol](https://goerli.etherscan.io/address/0xfccef97532caa9ddd6840a9c87843b8d491370fc#code#F2)
 - [cc0.photo](https://cc0.photo/2015/11/14/colorful-pumpkins/)
