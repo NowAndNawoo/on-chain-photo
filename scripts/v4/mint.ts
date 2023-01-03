@@ -8,7 +8,7 @@ async function main() {
   const contractAddress = getEnvValue('V4_CA');
   const tokenId = getEnvValueAsNumber('V4_ID');
 
-  const splitSize = 24544;
+  const splitSize = 24575;
   const overrides = getEIP1559Overrides(1, 0.1); // for Goerli
 
   const [owner] = await ethers.getSigners();
@@ -23,16 +23,8 @@ async function main() {
 
   // tokens
   const tokens = [
-    { tokenId: 1, fileSize: '101kb', uriEncode: true },
-    { tokenId: 2, fileSize: '199kb', uriEncode: true },
-    // { tokenId: 3, fileSize: '296kb', uriEncode: true },
-    // { tokenId: 4, fileSize: '406kb', uriEncode: true },
-    // { tokenId: 5, fileSize: '498kb', uriEncode: true },
-    // { tokenId: 6, fileSize: '603kb', uriEncode: true },
-    // { tokenId: 7, fileSize: '696kb', uriEncode: true },
-    // { tokenId: 8, fileSize: '724kb', uriEncode: true },
-    // { tokenId: 9, fileSize: '751kb', uriEncode: false },
-    // { tokenId: 10, fileSize: '762kb', uriEncode: false },
+    { tokenId: 1, fileSize: '1251kb', uriEncode: true },
+    { tokenId: 2, fileSize: '1357kb', uriEncode: false },
   ];
 
   const token = tokens.find((t) => t.tokenId === tokenId);
