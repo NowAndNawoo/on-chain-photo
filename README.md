@@ -6,6 +6,11 @@ Fully on-chain NFT of JPEG photo image.
 
 ![](image/onchainphoto.png)
 
+## 解説記事
+
+イーサリアム navi  
+[不可能を可能にする開発テクニック｜ 724KB の JPG 画像をフルオンチェーン NFT にする方法と具体的な手順を解説【Solidity】](https://ethereumnavi.com/2022/10/29/made-724kb-jpg-image-fully-on-chain-nft/)
+
 ## Setup
 
 ```shell
