@@ -9,7 +9,7 @@ async function main() {
   const tokenId = getEnvValueAsNumber('V4_ID');
 
   const splitSize = 24575;
-  const overrides = getEIP1559Overrides(1, 0.1); // for Goerli
+  const overrides = getEIP1559Overrides(1, 0.5); // for Goerli
 
   const [owner] = await ethers.getSigners();
   console.log('owner:', owner.address);
